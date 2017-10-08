@@ -10,6 +10,10 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: `/build/`
   },
+  resolve: {
+    modules: ['node_modules'],
+    extensions: ['.js', '.json']
+  },
   module: {
     loaders: [
       { test: /\.js$/, exclude: /node_modules/, loader: require.resolve('babel-loader'), options: { cacheDirectory: true } },
