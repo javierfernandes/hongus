@@ -1,0 +1,9 @@
+{
+  "name": "hongus",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "rambda": "^0.9.3"
+  }
+}
