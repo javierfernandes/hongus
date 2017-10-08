@@ -1,6 +1,6 @@
 import 'pixi.js'
 import { image } from './utils'
-import Game from './Game'
+import DungeonGame from './DungeonGame'
 
 const {
   Container, 
@@ -18,7 +18,7 @@ const stage = new Container()
 const renderer = autoDetectRenderer(512, 512)
 document.body.appendChild(renderer.view)
 
-const game = new Game(stage, renderer)
+const game = new DungeonGame(stage, renderer)
 
 loader
   .add(image('treasureHunter.json'))
