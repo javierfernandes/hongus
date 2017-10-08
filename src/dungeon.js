@@ -1,3 +1,4 @@
+import 'pixi.js'
 
 const {
   Container, 
@@ -8,6 +9,7 @@ const {
   Text,
   Graphics
 } = PIXI
+
 const { resources } = PIXI.loader
 const { TextureCache } = PIXI.utils
 
@@ -15,6 +17,7 @@ const stage = new Container()
 const renderer = autoDetectRenderer(512, 512)
 document.body.appendChild(renderer.view)
 
+const image = file => `/res/images/${file}`
 
 class Game {
   constructor() {
@@ -76,19 +79,19 @@ class Game {
 
   // let id, dungeon, door, explorer, treasure
   setupCharacters () {
-    this.id = resources['treasureHunter.json'].textures
+    this.id = resources[image('treasureHunter.json')].textures
 
-    //Dungeon
-    this.dungeon = new Sprite(this.id["dungeon.png"])
+    // Dungeon
+    this.dungeon = new Sprite(this.id['dungeon.png'])
     this.gameScene.addChild(this.dungeon)
 
-    //Door
-    this.door = new Sprite(this.id["door.png"])
+    // Door
+    this.door = new Sprite(this.id['door.png'])
     this.door.position.set(32, 0)
     this.gameScene.addChild(this.door)
 
-    //Explorer
-    this.explorer = new Sprite(this.id["explorer.png"])
+    // Explorer
+    this.explorer = new Sprite(this.id['explorer.png'])
     this.explorer.x = 68
     this.explorer.y = this.gameScene.height / 2 - this.explorer.height / 2
     this.explorer.vx = 0
@@ -96,7 +99,7 @@ class Game {
     this.gameScene.addChild(this.explorer)
 
     //Treasure
-    this.treasure = new Sprite(this.id["treasure.png"])
+    this.treasure = new Sprite(this.id['treasure.png'])
     this.treasure.x = this.gameScene.width - this.treasure.width - 48
     this.treasure.y = this.gameScene.height / 2 - this.treasure.height / 2
     this.gameScene.addChild(this.treasure)
@@ -152,7 +155,7 @@ class Game {
   setupGameOverText() {
     this.message = new Text(
       'The End!',
-      { font: "64px Futura", fill: "white" }
+      { font: '64px Futura', fill: 'white' }
     )
 
     this.message.x = 120
@@ -278,7 +281,7 @@ class Game {
 const game = new Game()
 
 loader
-  .add('treasureHunter.json')
+  .add(image('treasureHunter.json'))
   .load(game.setup.bind(game))
 
 
@@ -293,25 +296,25 @@ function contain(sprite, container) {
   //Left
   if (sprite.x < container.x) {
     sprite.x = container.x;
-    collision = "left";
+    collision = 'left';
   }
 
   //Top
   if (sprite.y < container.y) {
     sprite.y = container.y;
-    collision = "top";
+    collision = 'top';
   }
 
   //Right
   if (sprite.x + sprite.width > container.width) {
     sprite.x = container.width - sprite.width;
-    collision = "right";
+    collision = 'right';
   }
 
   //Bottom
   if (sprite.y + sprite.height > container.height) {
     sprite.y = container.height - sprite.height;
-    collision = "bottom";
+    collision = 'bottom';
   }
 
   //Return the `collision` value
@@ -388,10 +391,10 @@ function keyboard(keyCode) {
   };
   //Attach event listeners
   window.addEventListener(
-    "keydown", key.downHandler.bind(key), false
+    'keydown', key.downHandler.bind(key), false
   );
   window.addEventListener(
-    "keyup", key.upHandler.bind(key), false
+    'keyup', key.upHandler.bind(key), false
   );
   return key;
 }
