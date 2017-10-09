@@ -2,6 +2,8 @@ import { range } from 'ramda'
 import Scene from '../../dixy/Scene'
 import { image, randomInt, keyboard, contain, hitTestRectangle } from '../../utils'
 
+import Explorer from '../components/Explorer'
+
 const { loader, Sprite } = PIXI
 const { resources } = loader
 
@@ -22,7 +24,6 @@ export default class DungeonScene extends Scene {
     this.setupCharacters()
     this.setupEnemies()
     this.setupHealthBar()
-    this.setupKeyboard()
   }
 
   setupCharacters() {
@@ -38,11 +39,7 @@ export default class DungeonScene extends Scene {
     this.addChild(this.door)
 
     // Explorer
-    this.explorer = new Sprite(this.id['explorer.png'])
-    this.explorer.x = 68
-    this.explorer.y = this.height / 2 - this.explorer.height / 2
-    this.explorer.vx = 0
-    this.explorer.vy = 0
+    this.explorer = new Explorer(this.id['explorer.png'])
     this.addChild(this.explorer)
     
 
@@ -95,78 +92,14 @@ export default class DungeonScene extends Scene {
     this.healthBar.outer = createBar(0xFF3300)
   }
 
-  setupKeyboard() {
-    const left = keyboard(37)
-    const up = keyboard(38)
-    const right = keyboard(39)
-    const down = keyboard(40)
-    const self = this
-    
-    Object.assign(left, {
-      press() {
-        self.explorer.vx = -5
-        self.explorer.vy = 0
-      },
-      release() {
-        if (!right.isDown && self.explorer.vy === 0) {
-          self.explorer.vx = 0
-        }
-      }
-    })
-    
-    Object.assign(up, {
-      press() {
-        self.explorer.vy = -5;
-        self.explorer.vx = 0;
-      },
-      release() {
-        if (!down.isDown && self.explorer.vx === 0) {
-          self.explorer.vy = 0;
-        }
-      }
-    })
-
-    Object.assign(right, {
-      press() {
-        self.explorer.vx = 5
-        self.explorer.vy = 0
-      },
-      release() {
-        if (!left.isDown && self.explorer.vy === 0) {
-          self.explorer.vx = 0
-        }
-      }
-    })
-
-    Object.assign(down, {
-      press() {
-        self.explorer.vy = 5
-        self.explorer.vx = 0
-      },
-      release() {
-        if (!up.isDown && self.explorer.vx === 0) {
-          self.explorer.vy = 0
-        }
-      }
-    })
-
-  }
-
   update() {
     if (!this.explorer) {
       return
     }
-    this.moveExplorer()
+    this.explorer.update()
     this.moveEnemies()
     this.checkHits()
     this.checkHealth()
-  }
-
-  moveExplorer() {
-    if (this.explorer) {
-      this.explorer.x += this.explorer.vx
-      this.explorer.y += this.explorer.vy
-    }
   }
 
   moveEnemies() {
