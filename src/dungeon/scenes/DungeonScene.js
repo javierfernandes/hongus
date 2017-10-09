@@ -1,73 +1,58 @@
 import { range } from 'ramda'
-import { contain, hitTestRectangle, keyboard, randomInt, image } from './utils'
-import Game from './Game'
+import Scene from '../../dixy/Scene'
+import { image, randomInt, keyboard, contain, hitTestRectangle } from '../../utils'
 
-const {
-  Container, 
-  autoDetectRenderer,
-  loader,
-  Texture,
-  Sprite,
-  Text,
-  Graphics
-} = PIXI
-
+const { loader, Sprite } = PIXI
 const { resources } = loader
 
-export default class DungeonGame extends Game {
-  
-  //
-  // SETUP
-  //
+const { TextureCache } = PIXI.utils
 
-  doSetup() {
-    this.setupScenes()
+export default class DungeonScene extends Scene {
+
+  constructor() {
+    super()
+    this.blobs = []
+
+    loader
+      .add(image('treasureHunter.json'))
+      .load(::this.setup)
+  }
+
+  setup() {
     this.setupCharacters()
     this.setupEnemies()
     this.setupHealthBar()
-    this.setupGameOverText()
     this.setupKeyboard()
   }
-  
-  // gameScene, gameOverScene
-  setupScenes() {
-    this.gameScene = new Container()
-    this.stage.addChild(this.gameScene)
 
-    this.gameOverScene = new Container()
-    this.gameOverScene.visible = false
-    this.stage.addChild(this.gameOverScene)
-  }
-
-  // let id, dungeon, door, explorer, treasure
-  setupCharacters () {
+  setupCharacters() {
     this.id = resources[image('treasureHunter.json')].textures
 
     // Dungeon
     this.dungeon = new Sprite(this.id['dungeon.png'])
-    this.gameScene.addChild(this.dungeon)
+    this.addChild(this.dungeon)
 
     // Door
     this.door = new Sprite(this.id['door.png'])
     this.door.position.set(32, 0)
-    this.gameScene.addChild(this.door)
+    this.addChild(this.door)
 
     // Explorer
     this.explorer = new Sprite(this.id['explorer.png'])
     this.explorer.x = 68
-    this.explorer.y = this.gameScene.height / 2 - this.explorer.height / 2
+    this.explorer.y = this.height / 2 - this.explorer.height / 2
     this.explorer.vx = 0
     this.explorer.vy = 0
-    this.gameScene.addChild(this.explorer)
+    this.addChild(this.explorer)
+    
 
     //Treasure
     this.treasure = new Sprite(this.id['treasure.png'])
-    this.treasure.x = this.gameScene.width - this.treasure.width - 48
-    this.treasure.y = this.gameScene.height / 2 - this.treasure.height / 2
-    this.gameScene.addChild(this.treasure)
+    this.treasure.x = this.width - this.treasure.width - 48
+    this.treasure.y = this.height / 2 - this.treasure.height / 2
+    this.addChild(this.treasure)
   }
 
-  // let blobs
   setupEnemies() {
     const numberOfBlobs = 6
     const spacing = 48
@@ -79,24 +64,21 @@ export default class DungeonGame extends Game {
       const blob = new Sprite(this.id['blob.png'])
 
       blob.x = spacing * i + xOffset
-      blob.y = randomInt(0, this.stage.height - blob.height)
+      blob.y = randomInt(0, this.height - blob.height)
       blob.vy = speed * direction
       
-      this.gameScene.addChild(blob)
+      this.addChild(blob)
       
       direction *= -1
       return blob
     })  
-
   }
-
-  // let healthBar;
 
   setupHealthBar() {
     //Create the health bar
     this.healthBar = new PIXI.DisplayObjectContainer()
-    this.healthBar.position.set(this.stage.width - 170, 6)
-    this.gameScene.addChild(this.healthBar)
+    this.healthBar.position.set(this.width - 170, 6)
+    this.addChild(this.healthBar)
 
     const createBar = color => {
       let bar = new PIXI.Graphics()
@@ -111,19 +93,6 @@ export default class DungeonGame extends Game {
     createBar(0x000000)
     //Create the front red rectangle
     this.healthBar.outer = createBar(0xFF3300)
-  }
-
-  // let message
-  setupGameOverText() {
-    this.message = new Text(
-      'The End!',
-      { font: '64px Futura', fill: 'white' }
-    )
-
-    this.message.x = 120
-    this.message.y = this.stage.height / 2 - 32
-
-    this.gameOverScene.addChild(this.message)
   }
 
   setupKeyboard() {
@@ -183,26 +152,23 @@ export default class DungeonGame extends Game {
 
   }
 
-  //
-  // PLAY LOGIC
-  //
-
-  play() {
+  update() {
+    if (!this.explorer) {
+      return
+    }
     this.moveExplorer()
     this.moveEnemies()
-
     this.checkHits()
-
     this.checkHealth()
   }
 
-
   moveExplorer() {
-    this.explorer.x += this.explorer.vx
-    this.explorer.y += this.explorer.vy
+    if (this.explorer) {
+      this.explorer.x += this.explorer.vx
+      this.explorer.y += this.explorer.vy
+    }
   }
 
-  // let explorerHit = false
   moveEnemies() {
     this.explorerHit = false
     this.blobs.forEach(blob => {
@@ -220,8 +186,6 @@ export default class DungeonGame extends Game {
   checkHits() {
     if (this.explorerHit) {
       this.explorer.alpha = 0.5
-
-      // Reduce the width of the health bar's inner rectangle by 1 pixel
       this.healthBar.outer.width -= 1
     } else {
       this.explorer.alpha = 1
@@ -235,15 +199,14 @@ export default class DungeonGame extends Game {
 
     // hits the door ?
     if (hitTestRectangle(this.treasure, this.door)) {
-      this.state = this.end.bind(this)
-      this.message.text = 'You won!'
+      this.sceneManager.goToScene('youWon')
     }
   }
 
   checkHealth() {
     if (this.healthBar.outer.width < 0) {
-      this.state = this.end.bind(this)
-      this.message.text = 'You lost!'
+      this.sceneManager.goToScene('youLost')
     }
   }
+
 }

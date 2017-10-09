@@ -1,25 +1,14 @@
 import 'pixi.js'
 import { image } from './utils'
-import DungeonGame from './DungeonGame'
 
-const {
-  Container, 
-  autoDetectRenderer,
-  loader,
-  Texture,
-  Sprite,
-  Text,
-  Graphics
-} = PIXI
+import SceneManager from './dixy/SceneManager'
+import DungeonScene from './dungeon/scenes/DungeonScene'
+import EndScene from './dungeon/scenes/EndScene'
 
-const { TextureCache } = PIXI.utils
+const manager = new SceneManager(512, 512)
+manager.createScene('dungeon', DungeonScene)
+manager.createScene('youWon', EndScene, 'You Won!')
+manager.createScene('youLost', EndScene, 'You Lost!')
 
-const stage = new Container()
-const renderer = autoDetectRenderer(512, 512)
-document.body.appendChild(renderer.view)
+manager.goToScene('dungeon')
 
-const game = new DungeonGame(stage, renderer)
-
-loader
-  .add(image('treasureHunter.json'))
-  .load(game.setup.bind(game))

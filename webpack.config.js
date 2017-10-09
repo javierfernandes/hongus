@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const DashboardPlugin = require('webpack-dashboard/plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   entry: './src/dungeon.js',
@@ -22,8 +21,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new DashboardPlugin()
+    new webpack.HotModuleReplacementPlugin()
   ],
   devServer: {
     contentBase: __dirname + '/public',

@@ -1,5 +1,6 @@
 
 export default class Game {
+
   constructor(stage, renderer) {
     this.stage = stage
     this.renderer = renderer
@@ -7,6 +8,7 @@ export default class Game {
     this.state = undefined
     this.gameScene = undefined
     this.gameOverScene = undefined
+    this.components = []
   }
 
   // GENERAL Game Structure
@@ -35,6 +37,12 @@ export default class Game {
   end() {
     this.gameScene.visible = false
     this.gameOverScene.visible = true
+  }
+
+  // game creation
+
+  addComponent(component) {
+    this.gameScene.addChild(component)
   }
 
 }
