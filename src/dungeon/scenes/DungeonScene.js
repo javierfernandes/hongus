@@ -3,6 +3,7 @@ import Scene from '../../dixy/Scene'
 import { image, randomInt, keyboard, contain, hitTestRectangle } from '../../utils'
 
 import Explorer from '../components/Explorer'
+import Blob from '../components/Blob'
 
 const { loader, Sprite } = PIXI
 const { resources } = loader
@@ -42,7 +43,6 @@ export default class DungeonScene extends Scene {
     this.explorer = new Explorer(this.id['explorer.png'])
     this.addChild(this.explorer)
     
-
     //Treasure
     this.treasure = new Sprite(this.id['treasure.png'])
     this.treasure.x = this.width - this.treasure.width - 48
@@ -51,28 +51,22 @@ export default class DungeonScene extends Scene {
   }
 
   setupEnemies() {
-    const numberOfBlobs = 6
-    const spacing = 48
-    const xOffset = 150
-    const speed = 2
-    let direction = 1
+    const config = {
+      numberOfBlobs: 6,
+      spacing: 48,
+      xOffset: 150,
+      speed: 2,
+      direction: -1
+    }
 
-    this.blobs = range(0)(numberOfBlobs).map(i => {
-      const blob = new Sprite(this.id['blob.png'])
-
-      blob.x = spacing * i + xOffset
-      blob.y = randomInt(0, this.height - blob.height)
-      blob.vy = speed * direction
-      
-      this.addChild(blob)
-      
-      direction *= -1
-      return blob
-    })  
+    this.blobs = range(0)(config.numberOfBlobs).map(i  => {
+      return new Blob(this.id['blob.png'], config, i, config.direction *= -1)
+    })
+    this.blobs.forEach(blob => this.addChild(blob))
   }
 
   setupHealthBar() {
-    //Create the health bar
+    // Create the health bar
     this.healthBar = new PIXI.DisplayObjectContainer()
     this.healthBar.position.set(this.width - 170, 6)
     this.addChild(this.healthBar)
@@ -97,23 +91,10 @@ export default class DungeonScene extends Scene {
       return
     }
     this.explorer.update()
-    this.moveEnemies()
+    this.blobs.forEach(b => b.update())
+
     this.checkHits()
     this.checkHealth()
-  }
-
-  moveEnemies() {
-    this.explorerHit = false
-    this.blobs.forEach(blob => {
-      blob.y += blob.vy
-      const blobHitsWall = contain(blob, { x: 28, y: 10, width: 488, height: 480 })
-      if (blobHitsWall === 'top' || blobHitsWall === 'bottom') {
-        blob.vy *= -1
-      }
-      if(hitTestRectangle(this.explorer, blob)) {
-        this.explorerHit = true
-      }
-    })
   }
 
   checkHits() {
