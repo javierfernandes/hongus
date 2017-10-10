@@ -4,8 +4,9 @@ import { image, hitTestRectangle } from '../../utils'
 
 import Explorer from '../components/Explorer'
 import Blob from '../components/Blob'
+import Fruit from '../components/Fruit'
 
-const { loader, Sprite } = PIXI
+const { loader, Sprite, Texture } = PIXI
 const { resources } = loader
 
 export default class DungeonScene extends Scene {
@@ -41,6 +42,10 @@ export default class DungeonScene extends Scene {
     this.explorer = new Explorer(this.id['explorer.png'])
     this.addChild(this.explorer)
     
+    // Fruit
+    this.fruit = new Fruit(Texture.fromImage(image('fruit.png')))
+    this.addChild(this.fruit)
+
     // Treasure
     this.treasure = new Sprite(this.id['treasure.png'])
     this.treasure.x = this.width - this.treasure.width - 48

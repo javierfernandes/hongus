@@ -1,4 +1,4 @@
-import MovesWithKeyboard from '../../dixy/traits/MovesWithKeyboard'
+import MovesWithKeyboard from '../../dixy/traits/keyboard/MovesWithKeyboard'
 import Bounded from '../../dixy/traits/Bounded'
 import { wall } from '../../utils'
 

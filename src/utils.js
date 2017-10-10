@@ -64,33 +64,40 @@ export function hitTestRectangle(r1, r2) {
   return collides
 }
 
-export function keyboard(keyCode) {
-  const key = {
-    code: keyCode,
-    isDown: false,
-    isUp: true,
-    press: undefined,
-    release: undefined,
-
-    downHandler(event) {
-      if (event.keyCode === this.code) {
-        if (this.isUp && this.press) this.press()
-        this.isDown = true
-        this.isUp = false
-      }
-      event.preventDefault()
-    },
-    upHandler(event) {
-      if (event.keyCode === this.code) {
-        if (this.isDown && this.release) this.release()
-        this.isDown = false
-        this.isUp = true
-      }
-      event.preventDefault()
-    }
+class KeyController {
+  constructor(keyCode, onPress, onRelease) {
+    this.code = keyCode
+    this.isDown = false
+    this.isUp = true
+    this.press = onPress
+    this.release = onRelease
   }
-  
-  // Attach event listeners
+  onPress(fn) { this.press = fn }
+  onRelease(fn) { this.release = fn }
+
+  downHandler(event) {
+    if (event.keyCode === this.code) {
+      if (this.isUp && this.press) {
+        this.press()
+      }
+      this.isDown = true
+      this.isUp = false
+    }
+    event.preventDefault()
+  }
+  upHandler(event) {
+    if (event.keyCode === this.code) {
+      if (this.isDown && this.release) this.release()
+      this.isDown = false
+      this.isUp = true
+    }
+    event.preventDefault()
+  }
+}
+
+export function keyboard(keyCode, onPress, onRelease) {
+  const key = new KeyController(keyCode, onPress, onRelease)
+
   window.addEventListener('keydown', ::key.downHandler, false)
   window.addEventListener('keyup', ::key.upHandler, false)
   return key
