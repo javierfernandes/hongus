@@ -23,7 +23,7 @@ export default class Scene extends Stage {
     this.paused = false
   }
   isPaused() {
-      return this.paused;
+    return this.paused;
   }
 
   setSceneManager(manager) {

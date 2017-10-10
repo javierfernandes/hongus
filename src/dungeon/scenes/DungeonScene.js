@@ -1,14 +1,12 @@
 import { range } from 'ramda'
 import Scene from '../../dixy/Scene'
-import { image, randomInt, keyboard, contain, hitTestRectangle } from '../../utils'
+import { image, hitTestRectangle } from '../../utils'
 
 import Explorer from '../components/Explorer'
 import Blob from '../components/Blob'
 
 const { loader, Sprite } = PIXI
 const { resources } = loader
-
-const { TextureCache } = PIXI.utils
 
 export default class DungeonScene extends Scene {
 
@@ -43,7 +41,7 @@ export default class DungeonScene extends Scene {
     this.explorer = new Explorer(this.id['explorer.png'])
     this.addChild(this.explorer)
     
-    //Treasure
+    // Treasure
     this.treasure = new Sprite(this.id['treasure.png'])
     this.treasure.x = this.width - this.treasure.width - 48
     this.treasure.y = this.height / 2 - this.treasure.height / 2
@@ -59,9 +57,8 @@ export default class DungeonScene extends Scene {
       direction: -1
     }
 
-    this.blobs = range(0)(config.numberOfBlobs).map(i  => {
-      return new Blob(this.id['blob.png'], config, i, config.direction *= -1)
-    })
+    this.blobs = range(0)(config.numberOfBlobs)
+      .map(i => new Blob(this.id['blob.png'], config, i, config.direction *= -1))
     this.blobs.forEach(blob => this.addChild(blob))
   }
 
@@ -72,7 +69,7 @@ export default class DungeonScene extends Scene {
     this.addChild(this.healthBar)
 
     const createBar = color => {
-      let bar = new PIXI.Graphics()
+      const bar = new PIXI.Graphics()
       bar.beginFill(color)
       bar.drawRect(0, 0, 128, 8)
       bar.endFill()
@@ -82,7 +79,7 @@ export default class DungeonScene extends Scene {
 
     // Create the black background rectangle
     createBar(0x000000)
-    //Create the front red rectangle
+    // Create the front red rectangle
     this.healthBar.outer = createBar(0xFF3300)
   }
 

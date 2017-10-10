@@ -1,7 +1,6 @@
 import Scene from '../../dixy/Scene'
 
-const { loader, Sprite, Text } = PIXI
-const { resources } = loader
+const { Text } = PIXI
 
 export default class EndScene extends Scene {
 

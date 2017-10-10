@@ -1,11 +1,10 @@
-import { keyboard, contain, randomInt, hitTestRectangle } from '../../utils'
+import { contain, randomInt } from '../../utils'
 
 const { Container, Sprite } = PIXI
 
 export default class Blob extends Container {
-  constructor(texture, { speed, spacing, xOffset}, i, direction) {
+  constructor(texture, { speed, spacing, xOffset }, i, direction) {
     super()
-
 
     this.sprite = new Sprite(texture)
     this.x = spacing * i + xOffset
@@ -23,7 +22,9 @@ export default class Blob extends Container {
     this.explorerHit = false
     
     this.y += this.vy
-    const blobHitsWall = contain(this, { x: 28, y: 10, width: 488, height: 480 })
+    const blobHitsWall = contain(this, {
+      x: 28, y: 10, width: 488, height: 480 
+    })
     if (blobHitsWall === 'top' || blobHitsWall === 'bottom') {
       this.vy *= -1
     }

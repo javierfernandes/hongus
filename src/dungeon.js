@@ -1,5 +1,4 @@
 import 'pixi.js'
-import { image } from './utils'
 
 import SceneManager from './dixy/SceneManager'
 import DungeonScene from './dungeon/scenes/DungeonScene'

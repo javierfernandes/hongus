@@ -15,8 +15,7 @@ export default class SceneManager {
   loop() {
     requestAnimationFrame(::this.loop)
 
-    if (!this.currentScene || this.currentScene.isPaused()) 
-      return;
+    if (!this.currentScene || this.currentScene.isPaused()) { return; }
     
     this.currentScene.update()
     
@@ -30,7 +29,7 @@ export default class SceneManager {
     return this.addScene(id, scene)
   }
 
-  addScene(id, scene, ...args) {
+  addScene(id, scene) {
     if (this.scenes[id]) {
       return undefined
     }
