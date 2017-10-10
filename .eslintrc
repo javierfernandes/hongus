@@ -2,6 +2,7 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
    "rules": {
+     "object-curly-newline": 0,
      "no-return-assign": 0,
      "no-mixed-operators": 0,
      "computed-property-spacing": "warn",

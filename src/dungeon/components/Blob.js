@@ -1,4 +1,4 @@
-import { contain, randomInt } from '../../utils'
+import { randomInt, hitsTheWall } from '../../utils'
 
 const { Container, Sprite } = PIXI
 
@@ -22,10 +22,8 @@ export default class Blob extends Container {
     this.explorerHit = false
     
     this.y += this.vy
-    const blobHitsWall = contain(this, {
-      x: 28, y: 10, width: 488, height: 480 
-    })
-    if (blobHitsWall === 'top' || blobHitsWall === 'bottom') {
+    const hits = hitsTheWall(this)
+    if (hits === 'top' || hits === 'bottom') {
       this.vy *= -1
     }
     

@@ -1,4 +1,9 @@
 
+export const wall = { x: 28, y: 10, width: 488, height: 480 }
+
+export const hitsTheWall = object => contain(object, wall)
+
+
 export function contain(sprite, container) {
   let collision
 
