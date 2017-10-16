@@ -1,8 +1,9 @@
+import Component from '../../dixy/Component'
 import { randomInt, hitsTheWall } from '../../utils'
 
-const { Container, Sprite } = PIXI
+const { Sprite } = PIXI
 
-export default class Blob extends Container {
+export default class Blob extends Component {
   constructor(texture, { speed, spacing, xOffset }, i, direction) {
     super()
 
@@ -10,8 +11,6 @@ export default class Blob extends Container {
     this.x = spacing * i + xOffset
     this.vy = speed * direction
     this.addChild(this.sprite)
-    
-    this.on('added', ::this.componentDidMount)
   }
 
   componentDidMount() {
@@ -19,6 +18,7 @@ export default class Blob extends Container {
   }
 
   update() {
+    super.update()
     this.explorerHit = false
     
     this.y += this.vy

@@ -5,6 +5,7 @@ import { image, hitTestRectangle } from '../../utils'
 import Explorer from '../components/Explorer'
 import Blob from '../components/Blob'
 import Fruit from '../components/Fruit'
+import HealthBar from '../components/HealthBar'
 
 const { loader, Sprite, Texture } = PIXI
 const { resources } = loader
@@ -23,7 +24,15 @@ export default class DungeonScene extends Scene {
   setup() {
     this.setupCharacters()
     this.setupEnemies()
-    this.setupHealthBar()
+    
+    this.healthBar = new HealthBar()
+    this.healthBar.setProps({
+      onEnergyConsumed: ::this.onEnergyConsumed
+    })
+  }
+
+  onEnergyConsumed() {
+    this.sceneManager.goToScene('youLost')
   }
 
   setupCharacters() {
@@ -66,40 +75,18 @@ export default class DungeonScene extends Scene {
     this.blobs.forEach(blob => this.addChild(blob))
   }
 
-  setupHealthBar() {
-    // Create the health bar
-    this.healthBar = new PIXI.DisplayObjectContainer()
-    this.healthBar.position.set(this.width - 170, 6)
-    this.addChild(this.healthBar)
-
-    const createBar = color => {
-      const bar = new PIXI.Graphics()
-      bar.beginFill(color)
-      bar.drawRect(0, 0, 128, 8)
-      bar.endFill()
-      this.healthBar.addChild(bar)
-      return bar
-    }
-
-    // Create the black background rectangle
-    createBar(0x000000)
-    // Create the front red rectangle
-    this.healthBar.outer = createBar(0xFF3300)
-  }
-
   update() {
     if (!this.explorer) {
       return
     }
     super.update()
     this.checkHits()
-    this.checkHealth()
   }
 
   checkHits() {
     if (this.explorerHit) {
       this.explorer.alpha = 0.5
-      this.healthBar.outer.width -= 1
+      this.healthBar.reduce()
     } else {
       this.explorer.alpha = 1
     }
@@ -113,12 +100,6 @@ export default class DungeonScene extends Scene {
     // hits the door ?
     if (hitTestRectangle(this.treasure, this.door)) {
       this.sceneManager.goToScene('youWon')
-    }
-  }
-
-  checkHealth() {
-    if (this.healthBar.outer.width < 0) {
-      this.sceneManager.goToScene('youLost')
     }
   }
 

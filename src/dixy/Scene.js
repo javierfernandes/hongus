@@ -1,6 +1,6 @@
-const { Stage } = PIXI
+import Component from './Component'
 
-export default class Scene extends Stage {
+export default class Scene extends Component {
   
   constructor(background) {
     super(background)
@@ -9,25 +9,21 @@ export default class Scene extends Stage {
     this.components = []
   }
 
+  setSceneManager(manager) {
+    this.sceneManager = manager
+  }
+
+  pause() { this.paused = true }
+  resume() { this.paused = false }
+  isPaused() { return this.paused }
+
   update() {
+    super.update()
     this.components.forEach(c => {
       if (c.update) {
         c.update()
       }
     })
-  }
-  pause() {
-    this.paused = true
-  }
-  resume() {
-    this.paused = false
-  }
-  isPaused() {
-    return this.paused;
-  }
-
-  setSceneManager(manager) {
-    this.sceneManager = manager
   }
 
   addChild(c) {

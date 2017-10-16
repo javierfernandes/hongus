@@ -1,15 +1,14 @@
+import Component from '../../dixy/Component'
 import { randomInt } from '../../utils'
 
-const { Container, Sprite } = PIXI
+const { Sprite } = PIXI
 
-export default class Fruit extends Container {
+export default class Fruit extends Component {
   constructor(texture) {
     super()
 
     this.sprite = new Sprite(texture)
     this.addChild(this.sprite)
-    
-    this.on('added', ::this.componentDidMount)
   }
   
   componentDidMount() {
