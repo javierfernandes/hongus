@@ -30,8 +30,7 @@ export default class DungeonScene extends Scene {
     this.id = resources[image('treasureHunter.json')].textures
 
     // Dungeon
-    this.dungeon = new Sprite(this.id['dungeon.png'])
-    this.addChild(this.dungeon)
+    this.addChild(new Sprite(this.id['dungeon.png']))
 
     // Door
     this.door = new Sprite(this.id['door.png'])
@@ -92,9 +91,7 @@ export default class DungeonScene extends Scene {
     if (!this.explorer) {
       return
     }
-    this.explorer.update()
-    this.blobs.forEach(b => b.update())
-
+    super.update()
     this.checkHits()
     this.checkHealth()
   }

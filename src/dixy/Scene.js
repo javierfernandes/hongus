@@ -6,15 +6,15 @@ export default class Scene extends Stage {
     super(background)
     
     this.paused = false
-    this.updateCB = () => { }
-  }
-
-  onUpdate(updateCB) {
-    this.updateCB = updateCB
+    this.components = []
   }
 
   update() {
-    this.updateCB()
+    this.components.forEach(c => {
+      if (c.update) {
+        c.update()
+      }
+    })
   }
   pause() {
     this.paused = true
@@ -28,6 +28,11 @@ export default class Scene extends Stage {
 
   setSceneManager(manager) {
     this.sceneManager = manager
+  }
+
+  addChild(c) {
+    super.addChild(c)
+    this.components.push(c)
   }
 
 }
