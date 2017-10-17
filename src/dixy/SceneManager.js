@@ -2,12 +2,23 @@ import Scene from './Scene'
 
 export default class SceneManager {
   
-  constructor(width, height) {
+  constructor(width, height, scale = false) {
     this.scenes = {}
     this.currentScene = undefined
+    this.ratio = 1;
+    this.defaultWidth = width
+    this.defaultHeight = height
+    this.width = width
+    this.height = height
+    
     this.renderer = PIXI.autoDetectRenderer(width, height)
 
     document.body.appendChild(this.renderer.view)
+
+    if (scale) {
+      this.rescale();
+      window.addEventListener('resize', ::this.rescale, false)
+    }
     
     requestAnimationFrame(::this.loop)
   }
@@ -19,7 +30,9 @@ export default class SceneManager {
     
     this.currentScene.update()
     
+    this.applyRatio(this.currentScene, this.ratio)
     this.renderer.render(this.currentScene)
+    this.applyRatio(this.currentScene, 1 / this.ratio)
   }
 
   // 
@@ -49,5 +62,25 @@ export default class SceneManager {
       return true
     }
     return false
+  }
+
+  // scaling
+
+  rescale() {
+    this.ratio = Math.min(window.innerWidth / this.defaultWidth, window.innerHeight / this.defaultHeight)
+    this.width = this.defaultWidth * this.ratio
+    this.height = this.defaultHeight * this.ratio
+    this.renderer.resize(this.width, this.height)
+  }
+
+  applyRatio(object, ratio) {
+    if (ratio === 1) return
+    
+    object.position.x *= ratio
+    object.position.y *= ratio
+    object.scale.x *= ratio
+    object.scale.y *= ratio
+
+    object.children.forEach(c => this.applyRatio(c, ratio))
   }
 }

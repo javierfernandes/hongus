@@ -56,7 +56,8 @@
      "no-fallthrough": 0,
      "new-cap": 0,
      "spaced-comment": "warn",
-     "no-multi-spaces": "warn"
+     "no-multi-spaces": "warn",
+     "react/prop-types": 0,
    },
    "plugins": [
       "mocha"
