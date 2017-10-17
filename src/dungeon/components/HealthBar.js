@@ -25,7 +25,7 @@ export default class HealthBar extends Component {
 
   update() {
     super.update()
-    this.healthBar.position.set(this.width - 170, 6)
+    this.healthBar.position.set(this.parent.width - 170, 6)
 
     if (this.healthBar.outer.width < 0) {
       this.props.onEnergyConsumed()

@@ -29,6 +29,7 @@ export default class DungeonScene extends Scene {
     this.healthBar.setProps({
       onEnergyConsumed: ::this.onEnergyConsumed
     })
+    this.addChild(this.healthBar)
   }
 
   onEnergyConsumed() {
